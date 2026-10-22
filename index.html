@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Időutazás Magyarország térképén</title>
+  <meta name="description" content="Interaktív történelmi térkép: Magyarország határai a honfoglalás előttől az uniós csatlakozásig, korhű stílusban, hangokkal és animációkkal.">
+  <meta name="theme-color" content="#3a2615">
+  <meta property="og:title" content="Időutazás Magyarország térképén">
+  <meta property="og:description" content="A honfoglalás előttől az uniós csatlakozásig: 16 fordulópont, korhű térképekkel.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Saira+Stencil+One&family=Uncial+Antiqua&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body data-theme="kronika" data-mood="steppe" class="is-intro">
+  <div class="paper" aria-hidden="true">
+    <div class="paper__layer" data-for="kronika"></div>
+    <div class="paper__layer" data-for="rezmetszet"></div>
+    <div class="paper__layer" data-for="konyomat"></div>
+    <div class="paper__layer" data-for="hadi"></div>
+    <div class="paper__layer" data-for="hideg"></div>
+    <div class="paper__layer" data-for="modern"></div>
+  </div>
+
+  <main class="stage" id="stage">
+    <svg id="map" class="map" role="img" aria-labelledby="map-title">
+      <title id="map-title">Magyarország és szomszédai a kiválasztott korszakban</title>
+    </svg>
+    <canvas id="fx" class="fx" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="frame" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <svg class="compass" viewBox="-50 -50 100 100" aria-hidden="true">
+      <g class="compass__ring"><circle r="34"/><circle r="30"/></g>
+      <g class="compass__star">
+        <path d="M0-46 6-6 0 0-6-6Z"/><path d="M0 46-6 6 0 0 6 6Z" class="alt"/>
+        <path d="M46 0 6 6 0 0 6-6Z" class="alt"/><path d="M-46 0-6-6 0 0-6 6Z"/>
+        <path d="M24-24 3-3 0 0 5-1Z" class="alt" transform="rotate(0)"/><path d="M-24 24-3 3 0 0-5 1Z"/>
+        <path d="M24 24 3 3 0 0 1 5Z"/><path d="M-24-24-3-3 0 0-1-5Z" class="alt"/>
+      </g>
+      <text y="-37" class="compass__n">É</text>
+    </svg>
+  </main>
+
+  <header class="masthead">
+    <div class="masthead__title">
+      <h1>Időutazás <span class="h1-rest">Magyarország térképén</span></h1>
+      <p class="masthead__era" id="era-name">Középkori krónika</p>
+    </div>
+    <div class="masthead__controls">
+      <div class="layer-toggles" role="group" aria-label="Térképrétegek">
+        <button type="button" class="chip" data-layer="neighbours" aria-pressed="true" title="Szomszédos hatalmak">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h5v5H2zM9 8h5v5H9z"/></svg><span>Szomszédok</span>
+        </button>
+        <button type="button" class="chip" data-layer="modern" aria-pressed="true" title="A mai Magyarország határa">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8c2-4 4-5 6-4s4 4 6 2" stroke-dasharray="2 2"/></svg><span>Mai határ</span>
+        </button>
+        <button type="button" class="chip" data-layer="places" aria-pressed="true" title="Városok és csatahelyek">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M8 10v4"/></svg><span>Helyszínek</span>
+        </button>
+      </div>
+      <div class="sound">
+        <button type="button" class="icon-btn" id="sound-toggle" aria-pressed="true" aria-label="Hang be/ki" title="Hang be/ki">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M16 9l6 6M22 9l-6 6"/></svg>
+        </button>
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7" aria-label="Hangerő">
+      </div>
+    </div>
+  </header>
+
+  <aside class="card" id="card" aria-live="polite">
+    <button type="button" class="card__handle" id="card-handle" aria-expanded="true" aria-controls="card-body">
+      <span class="sr-only">Leírás megjelenítése vagy elrejtése</span>
+    </button>
+    <div class="card__inner" id="card-body"></div>
+  </aside>
+
+  <footer class="timeline" id="timeline">
+    <div class="timeline__controls">
+      <button type="button" class="icon-btn" id="prev" aria-label="Előző esemény" title="Előző (←)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button type="button" class="icon-btn icon-btn--play" id="play" aria-pressed="false" aria-label="Lejátszás" title="Lejátszás (szóköz)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="play" d="M8 5l11 7-11 7z"/><path class="pause" d="M8 5v14M16 5v14"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="next" aria-label="Következő esemény" title="Következő (→)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="timeline__track" id="track">
+      <div class="timeline__rail"><div class="timeline__progress" id="progress"></div></div>
+      <ol class="timeline__events" id="events"></ol>
+    </div>
+  </footer>
+
+  <div class="era-banner" id="era-banner" aria-hidden="true">
+    <div class="era-banner__inner"><span class="era-banner__num"></span><span class="era-banner__name"></span><span class="era-banner__range"></span></div>
+  </div>
+
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+  <section class="intro" id="intro" aria-labelledby="intro-title">
+    <div class="intro__inner">
+      <p class="intro__kicker">Interaktív történelmi atlasz</p>
+      <h2 id="intro-title">Időutazás<br>Magyarország térképén</h2>
+      <p class="intro__lead">Tizenhat fordulópont a honfoglalás előttől az uniós csatlakozásig. A térkép minden korszakban a kor saját stílusában jelenik meg: a középkori krónikáktól a hadi térképeken át a mai atlaszig.</p>
+      <button type="button" class="intro__start" id="start">
+        <span>Utazás indítása</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <p class="intro__hint">Hanggal az igazi. Lapozás: ← → nyilak, lejátszás: szóköz.</p>
+    </div>
+  </section>
+
+  <noscript><p class="noscript">Az oldal működéséhez JavaScript szükséges.</p></noscript>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

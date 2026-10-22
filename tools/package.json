@@ -1,0 +1,12 @@
+{
+  "name": "hungary-map-tools",
+  "private": true,
+  "type": "module",
+  "description": "Build script for the map data (data/map.topo.json)",
+  "scripts": {
+    "build": "node build-map.mjs"
+  },
+  "devDependencies": {
+    "mapshaper": "0.6.102"
+  }
+}

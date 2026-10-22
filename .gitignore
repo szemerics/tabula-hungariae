@@ -1,0 +1,7 @@
+# Node tools
+tools/node_modules/
+tools/.cache/
+
+# Editor / OS
+.DS_Store
+.claude/

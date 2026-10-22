@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Térképadatok ellenőrzése</title>
+<style>
+  body { margin: 0; font: 12px system-ui, sans-serif; background: #ddd; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); gap: 8px; padding: 8px; }
+  figure { margin: 0; background: #9cc3d5; }
+  figcaption { background: #fff; padding: 4px 8px; font-weight: 600; }
+  svg { display: block; width: 100%; height: auto; }
+  text { font-size: 9px; paint-order: stroke; stroke: #fff; stroke-width: 2px; }
+</style>
+</head>
+<body>
+<div class="grid" id="grid"></div>
+<script type="module">
+import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
+import * as topojson from 'https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/+esm';
+import { EVENTS } from '../assets/js/events.js';
+
+const topo = await (await fetch('../data/map.topo.json')).json();
+const L = (k) => topojson.feature(topo, topo.objects[k]).features;
+const land = L('land'), ev = L('ev'), rivers = L('rivers'), lakes = L('lakes'), modern = L('modern'), curtain = L('curtain');
+const fill = { hu: '#c0392b', hu2: '#e8a09a', hu3: '#e6b34a', ott: '#3c8d5a', lost: '#7d6bb3', lost2: '#b3a6dd', gain: '#e67e22', ghost: 'none', nb: '#cfc6b0' };
+const W = 460, H = 330;
+const only = new URLSearchParams(location.search).get('only');
+for (const e of EVENTS.filter((x) => !only || only.split(',').includes(x.id))) {
+  const [w, s, east, n] = e.view;
+  const proj = d3.geoConicConformal().parallels([44, 50]).rotate([-19.5, 0]).fitExtent([[0, 0], [W, H]], { type: 'MultiPoint', coordinates: [[w, s], [east, n], [w, n], [east, s]] });
+  const path = d3.geoPath(proj);
+  const fig = d3.select('#grid').append('figure');
+  fig.append('figcaption').text(`${e.year} – ${e.title}`);
+  const svg = fig.append('svg').attr('viewBox', `0 0 ${W} ${H}`);
+  svg.append('g').selectAll('path').data(land).join('path').attr('d', path).attr('fill', '#efe9da');
+  const feats = ev.filter((f) => f.properties.ev === e.id);
+  svg.append('g').selectAll('path').data(feats).join('path').attr('d', path)
+    .attr('fill', (f) => f.properties.role === 'nb' ? d3.schemeTableau10[Math.abs([...f.properties.name].reduce((a, c) => a * 31 + c.charCodeAt(0), 7)) % 10] + '55' : fill[f.properties.role])
+    .attr('fill-opacity', (f) => f.properties.role === 'gain' ? 0.5 + 0.12 * f.properties.phase : 0.85)
+    .attr('stroke', (f) => f.properties.role === 'ghost' ? '#000' : '#333').attr('stroke-width', 0.5)
+    .attr('stroke-dasharray', (f) => f.properties.role === 'ghost' ? '3 2' : null);
+  svg.append('g').selectAll('path').data(rivers).join('path').attr('d', path).attr('fill', 'none').attr('stroke', '#3a7bbf').attr('stroke-width', (f) => f.properties.w === 1 ? 1 : 0.5);
+  svg.append('g').selectAll('path').data(lakes).join('path').attr('d', path).attr('fill', '#3a7bbf');
+  svg.append('g').selectAll('path').data(modern).join('path').attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-dasharray', '1 2').attr('stroke-width', 0.8);
+  if (e.id === 'e1956') svg.append('g').selectAll('path').data(curtain).join('path').attr('d', path).attr('fill', 'none').attr('stroke', 'red').attr('stroke-width', 2);
+  svg.append('g').selectAll('text').data(feats.filter((f) => f.properties.lx != null)).join('text')
+    .attr('transform', (f) => `translate(${proj([f.properties.lx, f.properties.ly])})`).attr('text-anchor', 'middle')
+    .text((f) => f.properties.name + (f.properties.phase ? ` (${f.properties.phase})` : ''));
+  svg.append('g').selectAll('circle').data(e.places).join('circle').attr('r', 2.5).attr('fill', '#000')
+    .attr('transform', (p) => `translate(${proj(p.c)})`);
+}
+</script>
+</body>
+</html>
