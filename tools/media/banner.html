@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Tabula Hungariae – banner</title>
+<!-- Rendered to docs/media/banner.jpg (?type=banner, 1280×400) and
+     docs/media/social-preview.jpg (?type=social, 1280×640) by make-media.mjs -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&family=Inter:wght@600&family=Uncial+Antiqua&display=block">
+<style>
+  :root { --w: 1280px; --h: 400px; --red: #9e2b25; --ink: #3a2615; }
+  .social { --h: 640px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #1d140b; }
+  .banner { position: relative; width: var(--w); height: var(--h); overflow: hidden; background: #e6d3a7; }
+  .slices { position: absolute; inset: 0 -70px; display: flex; transform: skewX(-12deg); }
+  .slice { position: relative; flex: 1; overflow: hidden; border-right: 4px solid #e6d3a7; }
+  .slice i { position: absolute; inset: 0 -110px; transform: skewX(12deg); background-repeat: no-repeat; background-size: 1040px 650px; filter: saturate(.92); }
+  .slice span {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 0 14px 64px; transform: skewX(12deg);
+    font: 600 11px/1.2 Inter, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #fff7e6;
+    background: linear-gradient(to top, rgba(20, 12, 4, .78), transparent); text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+  }
+  .slice:first-child span { padding-left: 132px; }
+  .social .slice:first-child span { padding-left: 170px; }
+  .slice span b { display: block; font-size: 15px; letter-spacing: .06em; margin-bottom: 2px; }
+  .veil { position: absolute; inset: 0; background: radial-gradient(ellipse 48% 70% at 50% 46%, rgba(230, 211, 167, .55), transparent 70%); }
+  .plaque {
+    position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+    display: flex; align-items: center; gap: 30px; padding: 26px 44px 26px 30px;
+    background: rgba(241, 227, 192, .96); border: 4px double var(--red); border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(30, 15, 0, .45);
+  }
+  .plaque canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 2px; mix-blend-mode: multiply; opacity: .55; }
+  .plaque > * { position: relative; }
+  .plaque img { width: 150px; height: 150px; filter: drop-shadow(0 6px 10px rgba(60, 30, 10, .3)); }
+  h1 { margin: 0; font: 400 66px/1 'Uncial Antiqua', serif; color: var(--red); white-space: nowrap; }
+  p { margin: 8px 0 0; font: italic 400 25px/1.2 'EB Garamond', serif; color: var(--ink); }
+  small { display: block; margin-top: 14px; font: 600 12px/1 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #8a6d45; }
+  .social .plaque { top: 44%; flex-direction: column; text-align: center; gap: 14px; padding: 34px 60px 30px; }
+  .social .plaque img { width: 170px; height: 170px; }
+  .social h1 { font-size: 76px; }
+</style>
+</head>
+<body>
+<div class="banner" id="banner">
+  <div class="slices" id="slices"></div>
+  <div class="veil"></div>
+  <div class="plaque">
+    <canvas id="paper"></canvas>
+    <img src="../../assets/img/logo.svg" alt="">
+    <div>
+      <h1>Tabula Hungariae</h1>
+      <p>Magyarország története térképen</p>
+      <small>16 fordulópont · 6 korszak · 850–2004</small>
+    </div>
+  </div>
+</div>
+<script type="module">
+  import { ERAS } from '../../assets/js/events.js';
+  import { makePaper } from '../../assets/js/fx.js';
+  const type = new URLSearchParams(location.search).get('type') || 'banner';
+  document.body.classList.toggle('social', type === 'social');
+  const SHOTS = { kronika: 'era-1-kronika', rezmetszet: 'era-2-torok-kor', konyomat: 'era-3-reformkor', hadi: 'era-4-vilaghaboruk', hideg: 'era-5-kadar-kor', modern: 'era-6-koztarsasag' };
+  document.getElementById('slices').innerHTML = ERAS.map((e) =>
+    `<div class="slice"><i style="background-image:url(../../docs/media/${SHOTS[e.id]}.jpg)"></i><span><b>${e.num}</b>${e.short}</span></div>`).join('');
+  // centre every slice on Hungary (about x=560, y=430 in the 1600×1000 screenshots, shown at 65%)
+  for (const el of document.querySelectorAll('.slice i')) {
+    const k = Math.max(0.65, (el.offsetHeight / 2 + 24) / 430); // tall enough to cover the slice
+    el.style.backgroundSize = `${1600 * k}px ${1000 * k}px`;
+    el.style.backgroundPosition = `${el.offsetWidth / 2 - 560 * k}px ${el.offsetHeight / 2 - 430 * k}px`;
+  }
+  document.getElementById('paper').getContext('2d');
+  const paper = makePaper('kronika', 512);
+  const c = document.getElementById('paper');
+  c.width = 512; c.height = 512;
+  c.getContext('2d').drawImage(paper, 0, 0);
+  await document.fonts.ready;
+  await Promise.all([...document.images, ...Object.values(SHOTS).map((n) => Object.assign(new Image(), { src: `../../docs/media/${n}.jpg` }))].map((i) => i.decode().catch(() => {})));
+  document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

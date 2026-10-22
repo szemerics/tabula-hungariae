@@ -357,11 +357,17 @@ const RIVERS = {
   'Buzău': ['Bodza', 3], 'Trotuș': ['Tatros', 3], Moldova: ['Moldva', 3], 'Bistrița': ['Beszterce', 3], Inn: ['Inn', 2], Pripyat: ['Pripjaty', 2],
   'Soroksari Duna': ['Ráckevei-Duna', 3], 'Mosoni-Duna': ['Mosoni-Duna', 3], Bug: ['Bug', 2], 'Zakhidnyy Buh': ['Bug', 2], Desna: ['Gyeszna', 3],
 };
+// In Natural Earth only the lowest stretch of the Tisza is named; the unnamed segments
+// running past these towns are the rest of it.
+const TISZA_TOWNS = [[24.21, 48.05], [22.31, 48.13], [21.41, 48.12], [20.77, 47.62], [20.19, 47.18], [20.14, 46.71]];
+const nearTisza = (g) => (g.type === 'LineString' ? [g.coordinates] : g.coordinates)
+  .some((line) => line.some(([x, y]) => TISZA_TOWNS.some(([tx, ty]) => Math.abs(x - tx) < 0.06 && Math.abs(y - ty) < 0.06)));
 const riverFeats = [];
 for (const file of ['ne_10m_rivers_lake_centerlines.geojson', 'ne_10m_rivers_europe.geojson']) {
   const d = await readJSON(file);
   for (const f of d.features) {
-    const r = RIVERS[f.properties.name];
+    const unnamedTisza = !f.properties.name && f.properties.scalerank <= 6 && f.geometry && nearTisza(f.geometry);
+    const r = unnamedTisza ? ['Tisza', 1] : RIVERS[f.properties.name];
     if (r && f.geometry) riverFeats.push(feat(f.geometry, { n: r[0], w: r[1] }));
   }
 }

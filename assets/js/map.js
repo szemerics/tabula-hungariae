@@ -390,7 +390,7 @@ export class MapView {
     const boxes = [];
     const hit = (b) => boxes.some((o) => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
     const v = this.viewport();
-    const vp = { x: 4, y: v.y - 8, w: v.x + v.w + 24, h: v.y + v.h + 16 };
+    const vp = { x: 4, y: v.y - 8, w: Math.min(v.x + v.w + 24, this.W - 6), h: v.y + v.h + 16 };
     const inside = (b) => b.x > vp.x && b.y > vp.y && b.x + b.w < vp.w && b.y + b.h < vp.h;
     const ok = (b) => inside(b) && !hit(b);
     const hideNb = document.body.classList.contains('hide-neighbours');

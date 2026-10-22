@@ -51,15 +51,18 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-/* ---------------------------------------------------------------- themes */
-body[data-theme="kronika"] {
+/* ---------------------------------------------------------------- themes
+   Defined on [data-theme] (not only on body): the era banner carries the next era's
+   theme while the page still shows the previous one. Every theme sets all fonts. */
+[data-theme="kronika"] {
   --paper: #e6d3a7; --ink: #3a2615; --ink-soft: #6b5233; --accent: #9e2b25; --accent-2: #b08d3c;
   --sea: #cbb88a; --land: #efe1bd; --coast: #7d5f37; --river: #557286;
   --hu: #a3332a; --hu-stroke: #5e1610; --hu2: #b98a2e; --hu3: #c87a3c; --ott: #4d6b3a; --lost: #6a5a8c; --gain: #c2641d;
   --nb0: #d4bd8c; --nb1: #c3b27f; --nb2: #cda585; --nb3: #b8ad86; --nb4: #d2b383; --nb5: #bfa676; --nb-stroke: #8a6d45;
   --halo: #efe1bd; --card-bg: #f1e3c0; --card-border: #9e2b25; --vignette: #4a2c10; --grid: #8a6d45;
+  --font-display: 'Uncial Antiqua', 'EB Garamond', Georgia, serif; --font-body: 'EB Garamond', Georgia, serif; --font-map: 'EB Garamond', Georgia, serif; --hu-opacity: .55; --nb-opacity: .55; --label-case: none; --label-spacing: .06em;
 }
-body[data-theme="rezmetszet"] {
+[data-theme="rezmetszet"] {
   --paper: #efe5cc; --ink: #2b2118; --ink-soft: #5c4a37; --accent: #8c2f28; --accent-2: #2b2118;
   --sea: #e1d6b9; --land: #f5ecd6; --coast: #3b2e22; --river: #3b2e22;
   --hu: #cf5f57; --hu-stroke: #6e1f19; --hu2: #e09a83; --hu3: #dcb544; --ott: #5f9a5c; --lost: #7d6bb3; --gain: #c2641d;
@@ -67,8 +70,9 @@ body[data-theme="rezmetszet"] {
   --halo: #f5ecd6; --card-bg: #f6eedb; --card-border: #2b2118; --vignette: #3b2a18; --grid: #3b2e22;
   --font-display: 'Cinzel', 'EB Garamond', serif; --font-map: 'Cinzel', 'EB Garamond', serif;
   --hu-opacity: .5; --nb-opacity: .45; --label-case: uppercase; --label-spacing: .14em;
+  --font-body: 'EB Garamond', Georgia, serif;
 }
-body[data-theme="konyomat"] {
+[data-theme="konyomat"] {
   --paper: #f2ecdc; --ink: #1f2a33; --ink-soft: #4a5866; --accent: #a5322b; --accent-2: #2f5d7c;
   --sea: #c6dbe0; --land: #f8f3e7; --coast: #3e6b80; --river: #3e7896;
   --hu: #e59a8c; --hu-stroke: #8c2d2a; --hu2: #f0cf86; --hu3: #f2b8a0; --ott: #9cc39a; --lost: #7d6bb3; --gain: #c2641d;
@@ -76,8 +80,9 @@ body[data-theme="konyomat"] {
   --halo: #f8f3e7; --card-bg: #fbf7ee; --card-border: #1f2a33; --vignette: #3d4650; --grid: #6f8696;
   --font-display: 'Playfair Display', Georgia, serif; --font-map: 'Playfair Display', Georgia, serif;
   --hu-opacity: .75; --nb-opacity: .75; --label-case: uppercase; --label-spacing: .12em;
+  --font-body: 'EB Garamond', Georgia, serif;
 }
-body[data-theme="hadi"] {
+[data-theme="hadi"] {
   --paper: #d6caa9; --ink: #2d2a20; --ink-soft: #5a5442; --accent: #a3271d; --accent-2: #4f5a37;
   --sea: #b5ae93; --land: #ddd2b4; --coast: #4a4532; --river: #4b6170;
   --hu: #a83226; --hu-stroke: #6b1a12; --hu2: #c98a6a; --hu3: #c98a6a; --ott: #6c7b4b; --lost: #6e6650; --gain: #cf6a1b;
@@ -87,7 +92,7 @@ body[data-theme="hadi"] {
   --font-map: 'Courier Prime', 'Courier New', monospace;
   --hu-opacity: .5; --nb-opacity: .55; --label-case: uppercase; --label-spacing: .08em;
 }
-body[data-theme="hideg"] {
+[data-theme="hideg"] {
   --paper: #151a20; --ink: #dfe3e8; --ink-soft: #9aa5b1; --accent: #e0483b; --accent-2: #9aa5b1;
   --sea: #0e1216; --land: #222a32; --coast: #3a4652; --river: #2f4d63;
   --hu: #d23d2f; --hu-stroke: #ff7a66; --hu2: #8a3a33; --hu3: #8a3a33; --ott: #555; --lost: #555; --gain: #c2641d;
@@ -96,7 +101,7 @@ body[data-theme="hideg"] {
   --font-display: 'Oswald', 'Inter', sans-serif; --font-body: 'Inter', system-ui, sans-serif; --font-map: 'Oswald', 'Inter', sans-serif;
   --hu-opacity: .62; --nb-opacity: .9; --label-case: uppercase; --label-spacing: .16em;
 }
-body[data-theme="modern"] {
+[data-theme="modern"] {
   --paper: #f2f5f8; --ink: #17202b; --ink-soft: #566476; --accent: #1f4fa3; --accent-2: #f2b705;
   --sea: #d3e2ef; --land: #fbfcfd; --coast: #9fb5c9; --river: #7fa7c9;
   --hu: #1f4fa3; --hu-stroke: #f2b705; --hu2: #8fa8d6; --hu3: #8fa8d6; --ott: #888; --lost: #888; --gain: #c2641d;
@@ -415,8 +420,8 @@ body[data-theme="kronika"] .card__facts dt { color: var(--accent); }
 .breakdown { margin: 0 0 16px; }
 .breakdown h3, .card__section-title { margin: 0 0 8px; font-family: var(--font-ui); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 .bar { display: grid; grid-template-columns: 9.5em 1fr auto; align-items: center; gap: 8px; font-size: 13.5px; margin-bottom: 5px; }
-.bar__track { height: 9px; background: color-mix(in srgb, var(--ink) 10%, transparent); border-radius: 2px; overflow: hidden; }
-.bar__fill { height: 100%; width: 0; background: var(--accent); transition: width 1.4s var(--ease); }
+.bar__track { display: block; height: 9px; background: color-mix(in srgb, var(--ink) 10%, transparent); border-radius: 2px; overflow: hidden; }
+.bar__fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width 1.4s var(--ease); }
 .bar__val { font-family: var(--font-ui); font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
 .card__note { margin: 0; font-family: var(--font-ui); font-size: 11.5px; color: var(--ink-soft); }
@@ -439,15 +444,21 @@ body[data-theme="kronika"] .card__facts dt { color: var(--accent); }
 }
 .timeline__controls { display: flex; align-items: center; gap: 8px; flex: none; }
 .timeline__track { position: relative; flex: 1; min-width: 0; height: 84px; }
-.timeline__rail { position: absolute; left: 0; right: 0; top: 46px; height: 2px; background: color-mix(in srgb, var(--ink) 22%, transparent); }
+.timeline__rail { position: absolute; left: 0; right: 0; top: 50px; height: 2px; background: color-mix(in srgb, var(--ink) 22%, transparent); }
 .timeline__progress { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); transition: width .9s var(--ease); }
 .timeline__events { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; display: flex; }
 .tl-era { position: relative; display: flex; flex-direction: column; min-width: 0; }
 .tl-era + .tl-era { border-left: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
 .tl-era__label {
-  height: 26px; padding: 6px 10px 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-  font-family: var(--font-ui); font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
-  transition: color .4s;
+  height: 30px; padding: 0 8px 4px; overflow: hidden; display: flex; align-items: flex-end;
+  font-family: var(--font-ui); font-size: 10px; line-height: 1.15; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft);
+  transition: color .4s, opacity .4s;
+}
+/* narrow screens: only the current era is named, on one line */
+@media (max-width: 1100px) {
+  .tl-era__label { opacity: 0; white-space: nowrap; overflow: visible; position: relative; z-index: 1; }
+  .tl-era.is-current .tl-era__label { opacity: 1; }
+  .tl-era:nth-last-child(-n+2) .tl-era__label { align-self: flex-end; justify-content: flex-end; }
 }
 .tl-era.is-current .tl-era__label { color: var(--accent); }
 .tl-era ol { list-style: none; margin: 0; padding: 0; display: flex; flex: 1; }
@@ -483,7 +494,7 @@ body[data-theme="kronika"] .card__facts dt { color: var(--accent); }
 .era-banner.is-on .era-banner__name { animation: bannerName 2.6s var(--ease) both; }
 @keyframes bannerName { 0% { letter-spacing: .3em; filter: blur(6px); } 30% { letter-spacing: .04em; filter: blur(0); } 100% { letter-spacing: .02em; } }
 .era-banner__range { font-family: var(--font-body); font-style: italic; font-size: 19px; color: var(--ink-soft); }
-body[data-theme="hadi"] .era-banner__name, body[data-theme="hideg"] .era-banner__name, body[data-theme="modern"] .era-banner__name { text-transform: uppercase; }
+.era-banner[data-theme="hadi"] .era-banner__name, .era-banner[data-theme="hideg"] .era-banner__name, .era-banner[data-theme="modern"] .era-banner__name { text-transform: uppercase; }
 
 /* ---------------------------------------------------------------- intro */
 .intro {
@@ -498,6 +509,7 @@ body[data-theme="hadi"] .era-banner__name, body[data-theme="hideg"] .era-banner_
   background: color-mix(in srgb, #f1e3c0 92%, transparent); border: 3px double #9e2b25; border-radius: 4px;
   box-shadow: 0 30px 80px rgba(30, 15, 0, .45); color: #3a2615;
 }
+.intro__logo { display: block; width: 96px; height: 96px; margin: -8px auto 12px; filter: drop-shadow(0 6px 10px rgba(60, 30, 10, .25)); }
 .intro__kicker { margin: 0 0 10px; font-family: var(--font-ui); font-size: 12px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: #8a6d45; }
 .intro h2 { margin: 0 0 16px; font-family: 'Uncial Antiqua', serif; font-weight: 400; font-size: clamp(32px, 6vw, 50px); line-height: 1.08; color: #9e2b25; }
 .intro__sub { margin: -6px 0 18px; font-style: italic; font-size: 21px; color: #6b5233; }

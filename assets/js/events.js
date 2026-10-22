@@ -1,18 +1,20 @@
 // Az oldal tartalma: korszakok és események.
+// Minden korszaknak saját térképstílusa van (a `data-theme` értéke a korszak azonosítója).
 // A `view` a térkép látómezeje [nyugat, dél, kelet, észak] fokban; a build script is ezt használja.
 // A helyszínek típusa: capital (székhely), city (város), battle (csata), site (egyéb helyszín).
 
 export const ERAS = [
-  { id: 'kronika', label: 'Középkori krónika' },
-  { id: 'rezmetszet', label: 'Rézmetszetes térkép' },
-  { id: 'konyomat', label: 'Kőnyomatos atlasz' },
-  { id: 'hadi', label: 'Hadi térkép' },
-  { id: 'modern', label: 'Hidegháború és jelen' },
+  { id: 'kronika', num: 'I.', name: 'A honfoglalás és a középkor', short: 'Honfoglalás és középkor', range: 'a 9. századtól 1526-ig' },
+  { id: 'rezmetszet', num: 'II.', name: 'A török kor', short: 'Török kor', range: '1526–1699' },
+  { id: 'konyomat', num: 'III.', name: 'A reformkortól a dualizmusig', short: 'Reformkor és dualizmus', range: 'a 19. század' },
+  { id: 'hadi', num: 'IV.', name: 'A világháborúk kora', short: 'Világháborúk kora', range: '1914–1947' },
+  { id: 'hideg', num: 'V.', name: 'A Rákosi- és a Kádár-korszak', short: 'Rákosi- és Kádár-kor', range: '1947–1989' },
+  { id: 'modern', num: 'VI.', name: 'A harmadik köztársaság', short: 'Harmadik köztársaság', range: '1989-től' },
 ];
 
 export const EVENTS = [
   {
-    id: 'e850', year: '~850', era: 'kronika', theme: 'kronika', mood: 'steppe',
+    id: 'e850', year: '~850', era: 'kronika', mood: 'steppe',
     title: 'A honfoglalás előtt', subtitle: 'Etelköz, a 9. század közepe',
     view: [11.5, 42.0, 37.5, 52.0],
     text: 'A magyar törzsszövetség a 9. század közepén Etelközben, a Dnyeper és az Al-Duna közötti füves pusztán élt, a Kazár Kaganátus szomszédságában. A Kárpát-medencét ekkor, az Avar Kaganátus 800 körüli bukása után, a frankok, a morvák és a bolgárok érdekszférái osztották meg. A magyar lovas seregek 862-ben tűntek fel először nyugaton, így a medencét már jóval a honfoglalás előtt megismerték.',
@@ -30,7 +32,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e895', year: '895', era: 'kronika', theme: 'kronika', mood: 'horde',
+    id: 'e895', year: '895', era: 'kronika', mood: 'horde',
     title: 'Honfoglalás', subtitle: '895–900',
     view: [12.0, 42.5, 31.0, 51.0],
     text: 'A besenyők és a bolgárok támadása után a magyar törzsek 895 körül Árpád vezetésével átkeltek a Kárpátokon, a hagyomány szerint a Vereckei-hágón át. A honfoglalás több lépésben zajlott: 900-ra a Dunántúlt is birtokba vették, 907-ben pedig a pozsonyi csatában megsemmisítő vereséget mértek a bajor seregre. A Kárpát-medence ezzel a magyarság végleges hazája lett.',
@@ -47,7 +49,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1000', year: '1000', era: 'kronika', theme: 'kronika', mood: 'coronation',
+    id: 'e1000', year: '1000', era: 'kronika', mood: 'coronation',
     title: 'Államalapítás', subtitle: 'Szent István koronázása, 1000/1001',
     view: [12.0, 42.5, 28.5, 50.5],
     text: 'Géza fejedelem fia, István 1000 karácsonyán vagy 1001. január 1-jén királlyá koronáztatta magát; a koronát a hagyomány szerint II. Szilveszter pápától kapta. Legyőzte a trónra törő Koppányt, 1003-ban Erdély urát, Gyulát, később Ajtonyt is, és kiépítette a vármegyék és az egyházmegyék rendszerét. Magyarország ezzel keresztény királyságként az európai államok közösségének tagja lett.',
@@ -67,7 +69,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1241', year: '1241', era: 'kronika', theme: 'kronika', mood: 'mongol',
+    id: 'e1241', year: '1241', era: 'kronika', mood: 'mongol',
     title: 'Tatárjárás', subtitle: '1241–1242',
     view: [12.0, 42.5, 28.5, 50.5],
     text: 'Batu kán mongol seregei 1241 tavaszán több irányból törtek be az országba. Április 11-én a Sajó menti Muhinál megsemmisítették IV. Béla seregét; a király a dalmát tengerparton, Trau (Trogir) várában talált menedéket. A mongolok 1242 tavaszán váratlanul kivonultak, de a lakosság jelentős része odaveszett. Béla kővárak építésével és telepesek behívásával újjáépítette az országot, ezért „második honalapítóként” emlegetik.',
@@ -86,7 +88,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1526', year: '1526', era: 'kronika', theme: 'kronika', mood: 'battle',
+    id: 'e1526', year: '1526', era: 'kronika', mood: 'battle',
     title: 'Mohács', subtitle: '1526. augusztus 29.',
     view: [12.0, 42.5, 28.5, 50.5],
     text: 'I. Szulejmán szultán serege Mohácsnál alig két óra alatt megsemmisítette II. Lajos király hadát; a menekülő uralkodó a Csele-patakba fulladt. Öt évvel korábban, 1521-ben már elesett Nándorfehérvár, a déli végvárrendszer kulcsa. A király halála után két uralkodót is megválasztottak, Szapolyai Jánost és Habsburg Ferdinándot, és a belháború megnyitotta az utat az oszmán hódítás előtt.',
@@ -105,7 +107,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1541', year: '1541', era: 'rezmetszet', theme: 'rezmetszet', mood: 'ottoman',
+    id: 'e1541', year: '1541', era: 'rezmetszet', mood: 'ottoman',
     title: 'Az ország három részre szakad', subtitle: 'Buda eleste, 1541',
     view: [12.5, 42.8, 28.0, 50.3],
     text: '1541. augusztus 29-én, éppen 15 évvel Mohács után, I. Szulejmán csellel elfoglalta Budát. Az ország három részre szakadt: a nyugati és északi peremvidék Királyi Magyarországként a Habsburgoké lett, a középső részen kialakult a török hódoltság, keleten pedig a később Erdélyi Fejedelemség néven ismert állam. A térkép a 16. század második felének határait mutatja, amelyek a végvári harcok (Eger 1552, Szigetvár 1566) nyomán alakultak ki.',
@@ -125,7 +127,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1699', year: '1699', era: 'rezmetszet', theme: 'rezmetszet', mood: 'baroque',
+    id: 'e1699', year: '1699', era: 'rezmetszet', mood: 'baroque',
     title: 'Habsburg uralom', subtitle: 'A karlócai béke, 1699',
     view: [12.5, 42.8, 28.0, 50.3],
     text: 'Buda 1686-os visszafoglalása után a Szent Liga seregei sorra szabadították fel az oszmán uralom alatt álló területeket, és Savoyai Jenő 1697-ben Zentánál döntő győzelmet aratott. Az 1699. január 26-án megkötött karlócai béke Magyarországot és Erdélyt a Habsburgoknak juttatta, csak a Temesköz maradt 1718-ig oszmán kézen. Az ország a Habsburg Monarchia része lett; a függetlenségért vívott Rákóczi-szabadságharc (1703–1711) a szatmári békével zárult.',
@@ -145,7 +147,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1848', year: '1848', era: 'konyomat', theme: 'konyomat', mood: 'revolution',
+    id: 'e1848', year: '1848', era: 'konyomat', mood: 'revolution',
     title: 'Forradalom és szabadságharc', subtitle: '1848–1849',
     view: [12.0, 42.3, 28.5, 50.8],
     text: '1848. március 15-én Pesten vértelen forradalom győzött: kinyomtatták a 12 pontot és a Nemzeti dalt. Az áprilisi törvényekkel Magyarország felelős kormánnyal rendelkező alkotmányos monarchia lett, és kimondták az uniót Erdéllyel. A Habsburg-udvarral kirobbant háborúban a honvédsereg 1849 tavaszán sikeres hadjáratot vívott, de az orosz cári beavatkozás után a sereg 1849. augusztus 13-án Világosnál letette a fegyvert.',
@@ -166,7 +168,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1867', year: '1867', era: 'konyomat', theme: 'konyomat', mood: 'waltz',
+    id: 'e1867', year: '1867', era: 'konyomat', mood: 'waltz',
     title: 'A kiegyezés', subtitle: 'Osztrák–Magyar Monarchia, 1867',
     view: [12.0, 42.3, 28.5, 50.8],
     text: 'Az 1866-os königgrätzi osztrák vereség után Deák Ferenc vezetésével megszületett a kiegyezés. Létrejött az Osztrák–Magyar Monarchia: két önálló kormány, közös uralkodó, valamint közös had-, kül- és pénzügy. Erdély véglegesen egyesült Magyarországgal, Horvátország pedig az 1868-as horvát–magyar kiegyezés alapján autonómiát kapott. A következő évtizedek gyors fejlődést hoztak, 1873-ban egyesült Budapest.',
@@ -185,7 +187,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1914', year: '1914', era: 'hadi', theme: 'hadi', mood: 'war',
+    id: 'e1914', year: '1914', era: 'hadi', mood: 'war',
     title: 'Első világháború', subtitle: '1914–1918',
     view: [12.0, 42.3, 28.5, 50.8],
     text: 'Ferenc Ferdinánd trónörökös 1914. június 28-i szarajevói meggyilkolása után a Monarchia hadat üzent Szerbiának, és a konfliktus világháborúvá szélesedett. Magyar katonák a keleti, a szerb, majd az olasz fronton harcoltak; a Doberdó és az Isonzó neve máig ismerősen cseng. 1916-ban a román hadsereg betört Erdélybe. A Monarchia 1918 őszén összeomlott, és Magyarország november 16-án köztársasággá alakult.',
@@ -204,7 +206,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1920', year: '1920', era: 'hadi', theme: 'hadi', mood: 'requiem',
+    id: 'e1920', year: '1920', era: 'hadi', mood: 'requiem',
     title: 'Trianon', subtitle: '1920. június 4.',
     view: [12.5, 42.8, 28.0, 50.5],
     text: 'A Versailles-i Nagy-Trianon-palotában aláírt békeszerződés a történelmi Magyarország (Horvátország nélkül) területének mintegy kétharmadát a szomszédos államoknak ítélte. A legnagyobb részeket Románia, Csehszlovákia és a Szerb–Horvát–Szlovén Királyság kapta, kisebb területeket Ausztria, Lengyelország és Olaszország. Mintegy 3,3 millió magyar anyanyelvű ember került az új határokon túlra. Sopron és környéke az 1921-es népszavazáson Magyarország mellett döntött.',
@@ -228,7 +230,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1938', year: '1938', era: 'hadi', theme: 'hadi', mood: 'ww2',
+    id: 'e1938', year: '1938', era: 'hadi', mood: 'ww2',
     title: 'Bécsi döntések és a második világháború', subtitle: '1938–1945',
     view: [12.5, 42.8, 28.0, 50.5],
     text: 'A német–olasz döntőbíráskodás és katonai akciók nyomán Magyarország 1938 és 1941 között visszakapta a Trianonban elvesztett területek jelentős részét. Az ország 1941-ben belépett a háborúba a Szovjetunió ellen; a 2. magyar hadsereg 1943 januárjában a Don-kanyarnál katasztrofális vereséget szenvedett. 1944. március 19-én Németország megszállta az országot, és a magyarországi zsidóság mintegy félmillió tagja vált a holokauszt áldozatává. Budapest ostroma 1945 februárjában, a harcok áprilisban értek véget az ország területén.',
@@ -254,7 +256,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1947', year: '1947', era: 'hadi', theme: 'hadi', mood: 'postwar',
+    id: 'e1947', year: '1947', era: 'hadi', mood: 'postwar',
     title: 'A párizsi béke', subtitle: '1947. február 10.',
     view: [13.0, 43.8, 26.5, 49.8],
     text: 'A második világháborút lezáró párizsi békeszerződés visszaállította a trianoni határokat, sőt Csehszlovákia további három falut kapott Pozsony térségében (pozsonyi hídfő). Magyarországot 300 millió dollár jóvátétel fizetésére kötelezték, és az ország szovjet katonai megszállás alatt maradt. A kommunista párt 1947 és 1949 között megszerezte a teljes hatalmat; 1949-ben kikiáltották a Magyar Népköztársaságot.',
@@ -270,7 +272,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1956', year: '1956', era: 'modern', theme: 'hideg', mood: 'uprising',
+    id: 'e1956', year: '1956', era: 'hideg', mood: 'uprising',
     title: 'Forradalom és szabadságharc', subtitle: '1956. október 23. – november 4.',
     view: [13.0, 43.8, 26.5, 49.8],
     text: 'A budapesti egyetemisták október 23-i tüntetéséből forradalom lett: ledöntötték a Sztálin-szobrot, a felkelők a szovjet csapatokkal harcoltak. Nagy Imre kormánya bejelentette a kilépést a Varsói Szerződésből és az ország semlegességét. November 4-én a szovjet hadsereg megindította a támadást, és leverte a forradalmat. Mintegy 200 ezer ember menekült nyugatra, Nagy Imrét 1958-ban kivégezték.',
@@ -286,7 +288,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e1989', year: '1989', era: 'modern', theme: 'hideg', mood: 'freedom',
+    id: 'e1989', year: '1989', era: 'hideg', mood: 'freedom',
     title: 'Rendszerváltás', subtitle: '1989–1990',
     view: [13.0, 43.8, 26.5, 49.8],
     text: '1989-ben békés úton ért véget a pártállam: június 16-án újratemették Nagy Imrét, a Nemzeti Kerekasztal tárgyalásain pedig megállapodtak a szabad választásokról. Az augusztus 19-i soproni páneurópai pikniken több száz keletnémet lépett át Ausztriába, szeptember 11-én pedig Magyarország megnyitotta a határt előttük; a vasfüggöny lebontása hozzájárult a berlini fal leomlásához. Október 23-án kikiáltották a Magyar Köztársaságot, 1990 tavaszán pedig megtartották az első szabad választásokat.',
@@ -303,7 +305,7 @@ export const EVENTS = [
     ],
   },
   {
-    id: 'e2004', year: '2004', era: 'modern', theme: 'modern', mood: 'europe',
+    id: 'e2004', year: '2004', era: 'modern', mood: 'europe',
     title: 'Európai uniós csatlakozás', subtitle: '2004. május 1.',
     view: [13.0, 43.8, 26.5, 49.8],
     text: 'Magyarország 1999-ben a NATO, 2004. május 1-jén pedig kilenc másik országgal együtt az Európai Unió tagja lett; ez volt az unió történetének legnagyobb bővítése. A csatlakozásról a 2003-as népszavazáson a résztvevők 83,8%-a igennel szavazott. 2007 végén az ország a schengeni övezethez is csatlakozott, így megszűnt a rendszeres határellenőrzés az uniós szomszédok felé.',

@@ -4,14 +4,14 @@ import { MapView } from './map.js';
 import { Soundscape } from './audio.js';
 import { Particles, applyPapers } from './fx.js';
 
-const THEMES = {
-  kronika: { num: 'I.', name: 'Középkori krónika', range: 'a 9. századtól 1526-ig', cue: 'page' },
-  rezmetszet: { num: 'II.', name: 'Rézmetszetes térkép', range: 'a 16–18. század', cue: 'page' },
-  konyomat: { num: 'III.', name: 'Kőnyomatos atlasz', range: 'a 19. század', cue: 'page' },
-  hadi: { num: 'IV.', name: 'Hadi térkép', range: '1914–1947', cue: 'type' },
-  hideg: { num: 'V.', name: 'Hidegháború', range: '1947–1989', cue: 'radio' },
-  modern: { num: 'V.', name: 'A mai Európa', range: '1990-től', cue: 'sparkle' },
-};
+const ERA = Object.fromEntries(ERAS.map((e) => [e.id, e]));
+const ERA_CUE = { kronika: 'page', rezmetszet: 'page', konyomat: 'page', hadi: 'type', hideg: 'radio', modern: 'sparkle' };
+// Every font of every era is fetched up front (with the Hungarian accented letters),
+// so an era change never flashes a fallback font and labels are measured correctly.
+const FONT_FACES = ['400 16px "Uncial Antiqua"', '400 16px "EB Garamond"', 'italic 400 16px "EB Garamond"', '600 16px "EB Garamond"',
+  '400 16px Cinzel', '600 16px Cinzel', '400 16px "Playfair Display"', '600 16px "Playfair Display"', 'italic 400 16px "Playfair Display"',
+  '400 16px "Courier Prime"', '700 16px "Courier Prime"', 'italic 400 16px "Courier Prime"', '400 16px "Saira Stencil One"',
+  '400 16px Oswald', '500 16px Oswald', '600 16px Oswald', '400 16px Inter', '500 16px Inter', '600 16px Inter'];
 const ROLE_LABEL = { ghost: '1914-es határ', lost: 'Elcsatolt területek', lost2: 'Horvát–Szlavónország (elcsatolva)' };
 const FLASH_MOODS = new Set(['mongol', 'battle', 'war', 'ww2', 'uprising']);
 
@@ -24,6 +24,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 const state = { i: -1, started: false, playing: false, playTimer: null, token: 0 };
+const fontsReady = Promise.race([
+  Promise.all(FONT_FACES.map((f) => document.fonts.load(f, 'AaÁáÉéÍíÓóÖöŐőÚúÜüŰű'))).catch(() => {}),
+  sleep(3000),
+]);
 const sound = new Soundscape();
 const fx = new Particles($('#fx'));
 applyPapers();
@@ -43,7 +47,7 @@ function buildTimeline() {
       return `<li><button type="button" class="tl-ev" data-i="${i}" aria-label="${esc(e.year)}: ${esc(e.title)}">
         <span class="tl-ev__tip">${esc(e.title)}</span><span class="tl-ev__dot"></span><span class="tl-ev__year">${esc(e.year)}</span></button></li>`;
     }).join('');
-    return `<li class="tl-era" data-era="${era.id}" style="flex:${evs.length}"><span class="tl-era__label">${esc(era.label)}</span><ol>${items}</ol></li>`;
+    return `<li class="tl-era" data-era="${era.id}" style="flex:${Math.max(evs.length, 1.6)}"><span class="tl-era__label" title="${esc(era.name)}">${esc(era.short)}</span><ol>${items}</ol></li>`;
   }).join('');
   ol.addEventListener('click', (e) => {
     const b = e.target.closest('.tl-ev');
@@ -73,8 +77,7 @@ function updateTimeline() {
 
 // ------------------------------------------------------------------ card
 function renderCard(ev, i) {
-  const theme = THEMES[ev.theme];
-  const era = ERAS.find((e) => e.id === ev.era);
+  const era = ERA[ev.era];
   const feats = map.byEvent.get(ev.id) || [];
   const legend = [];
   const seen = new Set();
@@ -97,7 +100,7 @@ function renderCard(ev, i) {
       <g mask="url(#flag-hole)"><rect width="60" height="13.4" fill="#ce2939"/><rect y="13.3" width="60" height="13.4" fill="#f4f4f4"/><rect y="26.6" width="60" height="13.4" fill="#477050"/></g></svg>` : '';
 
   $('#card-body').innerHTML = `
-    <div class="card__meta"><span>${esc(era.label)}</span><span>${i + 1} / ${EVENTS.length}</span></div>
+    <div class="card__meta"><span>${esc(era.num)} ${esc(era.name)}</span><span>${i + 1} / ${EVENTS.length}</span></div>
     <p class="card__year">${esc(ev.year)}</p>
     <h2 class="card__title">${esc(ev.title)}</h2>
     <p class="card__subtitle">${esc(ev.subtitle)}</p>
@@ -108,7 +111,7 @@ function renderCard(ev, i) {
     <dl class="card__facts">${ev.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
     <h3 class="card__section-title">Jelmagyarázat</h3>
     <ul class="card__legend">${legend.map(([r, l]) => `<li><span class="sw sw--${r}"></span>${esc(l)}</li>`).join('')}</ul>
-    <p class="card__note">${esc(theme.name)} · A határok közelítőek, nyílt adatok alapján.</p>`;
+    <p class="card__note">A határok közelítőek, nyílt adatok alapján.</p>`;
   $('#card-body').scrollTop = 0;
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $('.card__text')?.classList.add('is-in');
@@ -118,17 +121,6 @@ function renderCard(ev, i) {
     state.phaseToken = Symbol('manual');
     setPhase(+b.dataset.p);
   }));
-}
-
-async function swapCard(ev, i) {
-  const card = $('#card');
-  card.classList.remove('is-entering');
-  card.classList.add('is-leaving');
-  await sleep(state.started ? 280 : 0);
-  renderCard(ev, i);
-  card.classList.remove('is-leaving');
-  void card.offsetWidth;
-  card.classList.add('is-entering');
 }
 
 function setPhase(p) {
@@ -142,9 +134,11 @@ function setPhase(p) {
 }
 
 // ------------------------------------------------------------------ era banner
-function showBanner(theme) {
-  const t = THEMES[theme];
+// The banner carries the new era's theme itself, so it appears in the right font at once.
+function showBanner(eraId) {
+  const t = ERA[eraId];
   const el = $('#era-banner');
+  el.dataset.theme = eraId;
   el.querySelector('.era-banner__num').textContent = `${t.num} korszak`;
   el.querySelector('.era-banner__name').textContent = t.name;
   el.querySelector('.era-banner__range').textContent = t.range;
@@ -154,42 +148,53 @@ function showBanner(theme) {
 }
 
 // ------------------------------------------------------------------ navigation
-async function go(i, { instant = false } = {}) {
+async function go(i, { instant = false, banner = true } = {}) {
   i = Math.max(0, Math.min(EVENTS.length - 1, i));
   if (i === state.i) return;
   const prev = EVENTS[state.i];
   const ev = EVENTS[i];
   state.i = i;
   const token = ++state.token;
-  const themeChange = !prev || prev.theme !== ev.theme;
+  const animate = state.started && !instant;
+  const eraChange = !prev || prev.era !== ev.era;
 
   updateTimeline();
   history.replaceState(null, '', `#${ev.id.slice(1)}`);
   document.title = `${ev.year} – ${ev.title} · Tabula Hungariae`;
 
-  if (themeChange && state.started) {
-    showBanner(ev.theme);
-    setTimeout(() => applyTheme(ev), 450);
-  } else applyTheme(ev);
-
   document.body.dataset.mood = ev.mood;
   sound.setMood(ev.mood);
   fx.setMood(ev.mood);
-  if (state.started && !instant) {
+  if (animate) {
     sound.cue('whoosh');
-    setTimeout(() => sound.cue(THEMES[ev.theme].cue), 350);
+    setTimeout(() => sound.cue(ERA_CUE[ev.era]), 350);
   }
 
-  swapCard(ev, i);
-  await map.show(ev, { instant });
+  // On an era change the banner covers the screen while colours and fonts switch;
+  // the card is refilled at that same moment, so no text shows up in the old font.
+  const covered = animate && eraChange && banner;
+  if (covered) showBanner(ev.era);
+  const card = $('#card');
+  card.classList.remove('is-entering');
+  if (animate) card.classList.add('is-leaving');
+  const shown = map.show(ev, { instant });
+  if (animate) await sleep(covered ? 480 : 280);
+  if (token !== state.token) return;
+  applyTheme(ev);
+  renderCard(ev, i);
+  card.classList.remove('is-leaving');
+  void card.offsetWidth;
+  card.classList.add('is-entering');
+
+  await shown;
   if (token !== state.token || !state.started) return;
   await eventExtras(ev, token);
   if (state.playing && token === state.token) schedulePlay(ev);
 }
 
 function applyTheme(ev) {
-  document.body.dataset.theme = ev.theme;
-  $('#era-name').textContent = THEMES[ev.theme].name;
+  document.body.dataset.theme = ev.era;
+  $('#era-name').textContent = ERA[ev.era].name;
   document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.body).getPropertyValue('--paper').trim() || '#3a2615';
 }
 
@@ -378,23 +383,36 @@ function indexFromHash() {
 // ------------------------------------------------------------------ start
 buildTimeline();
 initControls();
-$('#start').addEventListener('click', async () => {
+document.fonts.addEventListener?.('loadingdone', () => map.placeLabels());
+
+async function begin() {
   state.started = true;
-  $('#intro').classList.add('is-gone');
+  $('#intro')?.classList.add('is-gone');
   document.body.classList.remove('is-intro');
+  const i = Math.max(0, state.i >= 0 ? state.i : indexFromHash());
   if (sound.enabled) {
     await sound.start();
-    sound.setMood(EVENTS[state.i].mood);
+    sound.setMood(EVENTS[i].mood);
     sound.cue('whoosh');
   }
-  updateTimeline();
-  setTimeout(() => $('#intro').remove(), 1200);
+  setTimeout(() => $('#intro')?.remove(), 1200);
   // replay the opening so the first map draws itself in front of the viewer
-  const i = state.i;
   state.i = -1;
   map.current = null;
+  await fontsReady;
   go(i);
-});
+}
 
-// the first map is drawn behind the intro
-go(Math.max(0, indexFromHash()), { instant: true });
+// ?intro=0 skips the intro screen (used for screenshots); sound then starts muted until toggled
+if (new URLSearchParams(location.search).get('intro') === '0') {
+  $('#intro').remove();
+  document.body.classList.remove('is-intro');
+  state.started = true;
+  await fontsReady;
+  go(Math.max(0, indexFromHash()), { banner: false });
+} else {
+  $('#start').addEventListener('click', begin);
+  // the first map is drawn behind the intro
+  await fontsReady;
+  if (!state.started) go(Math.max(0, indexFromHash()), { instant: true });
+}
