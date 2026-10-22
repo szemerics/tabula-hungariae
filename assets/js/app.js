@@ -165,7 +165,7 @@ async function go(i, { instant = false } = {}) {
 
   updateTimeline();
   history.replaceState(null, '', `#${ev.id.slice(1)}`);
-  document.title = `${ev.year} – ${ev.title} · Időutazás Magyarország térképén`;
+  document.title = `${ev.year} – ${ev.title} · Tabula Hungariae`;
 
   if (themeChange && state.started) {
     showBanner(ev.theme);

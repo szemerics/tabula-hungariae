@@ -1,5 +1,5 @@
 {
-  "name": "hungary-map-tools",
+  "name": "tabula-hungariae-tools",
   "private": true,
   "type": "module",
   "description": "Build script for the map data (data/map.topo.json)",

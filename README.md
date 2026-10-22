@@ -1,4 +1,6 @@
-# Időutazás Magyarország térképén
+# Tabula Hungariae
+
+*Magyarország története térképen*
 
 Interaktív történelmi atlasz: Magyarország határai 16 fordulóponton keresztül, a honfoglalás előtti Etelköztől a 2004-es uniós csatlakozásig. A térkép minden korszakban a kor saját stílusában jelenik meg, korszakhoz illő generált hangokkal és animációkkal.
 
@@ -9,6 +11,8 @@ Interaktív történelmi atlasz: Magyarország határai 16 fordulóponton keresz
 | Kőnyomatos atlasz | 1848, 1867 | 19. századi pasztell atlaszszínek, fokhálózat |
 | Hadi térkép | 1914, 1920, 1938–41, 1947 | szépia, hajtásnyomok, gépírásos betűk |
 | Hidegháború és jelen | 1956, 1989, 2004 | sötét hidegháborús térkép, majd letisztult modern atlasz |
+
+A név Lázár deák 1528-as *Tabula Hungariae* térképére utal, amely a legrégebbi fennmaradt Magyarország-térkép.
 
 ## Funkciók
 
@@ -65,9 +69,9 @@ Az adat ellenőrzéséhez: `tools/preview.html` (a helyi szerveren: <http://loca
 
 ## Közzététel GitHub Pagesen
 
-1. Hozz létre egy új, nyilvános repót a GitHubon (pl. `hungary-map`), és töltsd fel ide a mappa tartalmát.
+1. Hozz létre egy új, nyilvános repót a GitHubon (pl. `tabula-hungariae`), és töltsd fel ide a mappa tartalmát.
 2. A repó **Settings → Pages** oldalán: *Source:* „Deploy from a branch”, *Branch:* `main`, mappa: `/ (root)` → **Save**.
-3. Pár perc múlva az oldal elérhető: `https://<felhasználónév>.github.io/hungary-map/`
+3. Pár perc múlva az oldal elérhető: `https://<felhasználónév>.github.io/tabula-hungariae/`
 
 Ha a repó neve pontosan `<felhasználónév>.github.io`, akkor az oldal a gyökércímen lesz: `https://<felhasználónév>.github.io/`. Saját domain később is beállítható ugyanott (*Custom domain*).
 
